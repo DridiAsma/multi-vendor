@@ -44,7 +44,8 @@ class CategoryController extends Controller
     public function create()
     {
         //
-        return view('backend.category.create');
+        $parent_cats=Category::where('is_parent',1)->orderBy('title','ASC')->get();
+        return view('backend.category.create',compact('parent_cats'));
     }
 
     /**
@@ -61,14 +62,14 @@ class CategoryController extends Controller
             'title'=>'string|required',
             'summary'=>'string|nullable',
             'photo'=>'required',
-            'is_parent'=>'required',
-            'parent_id'=>'required',
+            'is_parent'=>'sometimes|in:1',
+            'parent_id'=>'nullable',
             'status'=>'nullable|in:active,inactive',
         ]);
         $data=$request->all();
         $slug=Str::slug($request->input('title'));
         $slug_count= Category::where('slug',$slug)->count();
-        if($slug_count>8){
+        if($slug_count>0){
             $slug = time().'-'.$slug;
         }
         $data['slug']=$slug;
@@ -101,8 +102,9 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category=Category::find($id);
+        $parent_cats=Category::where('is_parent',1)->orderBy('title','ASC')->get();
         if($category){
-            return view('backend.category.edit',compact('category'));
+            return view('backend.category.edit',compact('category', 'parent_cats'));
         }else{
             return back()->with('error','Data not found');
         }
@@ -121,16 +123,17 @@ class CategoryController extends Controller
         if($category){
             $request->validate([
                 'title'=>'string|required',
-                'description'=>'string|nullable',
+                'summary'=>'string|nullable',
                 'photo'=>'required',
-                'condition'=>'nullable|in:category,promo',
-                'status'=>'nullable|in:active,inactive',
+                'is_parent'=>'sometimes|in:1',
+                'parent_id'=>'nullable|exists:category,id',
+                'status'=>'required|in:active,inactive',
             ]);
             $data=$request->all();
 
             $status=$category->fill($data)->save();
             if($status){
-                return redirect()->route('category.index')->with('success','Successfully update banner');
+                return redirect()->route('category.index')->with('success','Successfully update CATEGORY');
             }
             else{
                 return back()->with('error','Something went wrong!');
@@ -141,15 +144,45 @@ class CategoryController extends Controller
         }
 }
 
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        $category=Category::find($id);
+        $child_cat_id=Category::where('parent_id',$id)->pluck('id');
+        if($category){
+            $status=$category->delete();
+            if($status){
+                if(count($child_cat_id)>0){
+                    Category::shiftChild($child_cat_id);
+                }
+
+                return redirect()->route('category.index')->with('success','Category successfully deleted');
+            }
+            else{
+                return back()->with('error','Something went wrong!');
+            }
+        }
+        else{
+            return back()->with('error','Data not found');
+        }
+    }
+
+    public function getChildByParentID(Request $request, $id){
+     $category=Category::find($request->id);
+     if($category){
+        $child_id=Category::getChildByParentID($request->id);
+        if(count($child_id)<=0){
+            return response()->json(['status'=>false, 'data'=>null,'msg'=>'']);
+        }
+        return response()->json(['status'=>true,'data'=>$child_id,'msg'=>'']);
+    }
+     else{
+        return response()->json(['status'=>false,'data'=>null,'msg'=>'Category not found']);
+     }
     }
 }

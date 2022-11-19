@@ -36,29 +36,29 @@
                         <div class="body">
                             <form action="{{ route('category.store') }}" method="post">
                                 @csrf
-                                <div class="row clearfix">
-                                    <div class="col-sm-12">
-                                        <label>Titre <span class="text-danger">*</span></label>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Titre" name="title"
-                                                value="{{ old('title') }}">
-                                        </div>
+
+                                <div class="col-sm-12">
+                                    <label>Titre <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Titre" name="title"
+                                            value="{{ old('title') }}">
                                     </div>
                                 </div>
 
-                                <div class="row clearfix">
-                                    <div class="col-md-6 col-sm-12">
-                                        <label></label>
-                                        <select name="status" class="form-control show-tick">
-                                            <option value="">Status</option>
-                                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>
-                                                Active
-                                            </option>
-                                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>
-                                                InActive</option>
-                                        </select>
-                                    </div>
+
+
+                                <div class="col-sm-12">
+                                    <label> Status</label>
+                                    <select name="status" class="form-control show-tick">
+                                        <option value="">Status</option>
+                                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>
+                                            Active
+                                        </option>
+                                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>
+                                            InActive</option>
+                                    </select>
                                 </div>
+
 
                                 <div class="col-sm-12">
                                     <label>Image<span class="text-danger">*</span></label>
@@ -74,6 +74,22 @@
                                     <div id="holder" style="margin-top:15px;max-height:100px;">
                                     </div>
                                 </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="form-group">
+                                        <label for="">Is Parent <span class="text-danger">*</span> :</label>
+                                        <input id="is_parent"  type="checkbox" name="is_parent" value="1" checked>Yes
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-sm-12 d-none" id="parent_cat">
+                                    <label for="parent_id"> Parent Category </label>
+                                    <select name="parent_id" class="form-control show-tick">
+                                        <option value=""> Parent Category </option>
+                                        @foreach ($parent_cats as $pcats)
+                                        <option value="{{$pcats->id}}">{{$pcats->title}}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
 
                                 <div class="col-sm-12">
                                     <label for="summary">Summary<span class="text-danger">*</span></label>
@@ -81,12 +97,7 @@
                                         <textarea id="summary" class="form-control no-resize" name="summary" placeholder="Please type what you want...">{{ old('summary') }}</textarea>
                                     </div>
                                 </div>
-                               <div class="col-lg-12 col-md-12">
-                            <div class="form-group">
-                             <label for="">Is Parent <span class="text-danger">*</span> :</label>
-                             <input type="checkbox" name="is_parent" value="1" checked>Yes
-                                </div>
-                               </div>
+
 
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -103,16 +114,30 @@
 @endsection
 
 @section('scripts')
-
-{{--  //image uplode  --}}
+    {{--  //image uplode  --}}
     <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
     <script>
         $('#lfm').filemanager('image');
     </script>
-{{--  //text summary  --}}
+    {{--  //text summary  --}}
     <script>
         $(document).ready(function() {
             $('#summary').summernote();
         });
+    </script>
+{{--  get liste parent  --}}
+        <script>
+      $('#is_parent').change(function(e){
+        e.preventDefault();
+        var is_checked=$('#is_parent').prop('checked');
+
+        if(is_checked){
+            $('#parent_cat').addClass('d-none');
+            $('#parent_cat').val('');
+        }
+        else{
+            $('#parent_cat').removeClass('d-none');
+        }
+      })
     </script>
 @endsection

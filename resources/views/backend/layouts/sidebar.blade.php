@@ -55,13 +55,25 @@
                             <ul>
                                 <li><a href="{{route('category.index')}}">All Category</a></li>
                                 <li><a href="{{route('category.create')}}">Add Category</a></li>
-                               
+
                             </ul>
                         </li>
+
+                        <li><a href="javascript:void(0);" class="has-arrow"><i class="icon-graduation"></i><span>Brand Management</span> </a>
+                            <ul>
+                                <li><a href="{{route('brand.index')}}">All Brand</a></li>
+                                <li><a href="{{route('brand.create')}}">Add Brand</a></li>
+
+                            </ul>
+                        </li>
+
+
+
+
                         <li><a href="javascript:void(0);" class="has-arrow"><i class="icon-notebook"></i><span>Products Management</span> </a>
                             <ul>
-                                <li><a href="add-library.html">Add Library</a></li>
-                                <li><a href="library.html">List Library</a></li>
+                                <li><a href="{{route('product.create')}}">Add Product</a></li>
+                                <li><a href="{{route('product.index')}}">List Product</a></li>
                             </ul>
                         </li>
                         <li><a href="javascript:void(0);" class="has-arrow"><i class="icon-share fa-rotate-90 d-inline-block"></i><span>Carts Management</span> </a>

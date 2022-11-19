@@ -34,47 +34,30 @@
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="card">
                         <div class="body">
-                            <form action="{{ route('category.update',$category->id)}}" method="post">
+                            <form action="{{ route('brand.update',$brand->id)}}" method="post">
                                 @csrf
                                 @method('patch')
-
+                                <div class="row clearfix">
                                     <div class="col-sm-12">
                                         <label for="">Titre <span class="text-danger">*</span></label>
                                         <div class="form-group">
                                             <input type="text" class="form-control" placeholder="Titre" name="title"
-                                                value="{{$category->title}}">
+                                                value="{{$brand->title}}">
                                         </div>
                                     </div>
-
+                                </div>
 
 
                                     <div class="col-md-6 col-sm-12">
                                         <label></label>
                                         <select name="status" class="form-control show-tick">
                                             <option value="">Status</option>
-                                            <option value="active" {{$category->status== 'active' ? 'selected' : '' }}>
+                                            <option value="active" {{$brand->status== 'active' ? 'selected' : '' }}>
                                                 Active
                                             </option>
-                                            <option value="inactive" {{$category->status== 'inactive' ? 'selected' : '' }}>
+                                            <option value="inactive" {{$brand->status== 'inactive' ? 'selected' : '' }}>
                                                 InActive</option>
                                         </select>
-                                    </div>
-
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="form-group">
-                                            <label for="">Is Parent <span class="text-danger">*</span> :</label>
-                                            <input id="is_parent"  type="checkbox" name="is_parent" value="1" checked>Yes
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 col-sm-12 d-none" id="parent_cat">
-                                        <label for="parent_id"> Parent Category </label>
-                                        <select name="parent_id" class="form-control show-tick">
-                                            <option value=""> Parent Category </option>
-                                            @foreach ($parent_cats as $pcats)
-                                            <option value="{{$pcats->id}}">{{$pcats->title}}</option>
-                                            @endforeach
-                                        </select>
-
                                     </div>
 
 
@@ -88,18 +71,13 @@
                                                 <i class="fa fa-picture-o"></i> Choose
                                             </a>
                                         </span>
-                                        <input id="thumbnail" class="form-control" type="text" name="photo" value="{{$category->photo}}">
+                                        <input id="thumbnail" class="form-control" type="text" name="photo" value="{{$brand->photo}}">
                                     </div>
                                     <div id="holder" style="margin-top:15px;max-height:100px;">
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12">
-                                    <label for="">Description<span class="text-danger">*</span></label>
-                                    <div class="form-group mt-3">
-                                        <textarea id="summary" class="form-control no-resize" placeholder="Please...">{{$category->summary}}</textarea>
-                                    </div>
-                                </div>
+
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary">Update</button>
                                     <button type="submit" class="btn btn-outline-secondary">Cancel</button>
@@ -114,32 +92,15 @@
     </div>
 @endsection
 
-
 @section('scripts')
-    {{--  //image uplode  --}}
     <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
     <script>
         $('#lfm').filemanager('image');
     </script>
-    {{--  //text summary  --}}
+
     <script>
         $(document).ready(function() {
-            $('#summary').summernote();
+            $('#description').summernote();
         });
-    </script>
-     {{--  get liste parent  --}}
-        <script>
-      $('#is_parent').change(function(e){
-        e.preventDefault();
-        var is_checked=$('#is_parent').prop('checked');
-
-        if(is_checked){
-            $('#parent_cat').addClass('d-none');
-            $('#parent_cat').val('');
-        }
-        else{
-            $('#parent_cat').removeClass('d-none');
-        }
-      })
     </script>
 @endsection

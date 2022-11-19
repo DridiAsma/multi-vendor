@@ -6,20 +6,20 @@
             <div class="block-header">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i
-                                    class="fa fa-arrow-left"></i></a>Category
-                                    <a class="btn btn-sm btn-outline-secondary"  href="{{route('category.create')}}"><i  class="icon-plus"></i>Create Banner</a></h2>
+                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth">
+                            <i class="fa fa-arrow-left"></i></a>Brands
+                                    <a class="btn btn-sm btn-outline-secondary"  href="{{route('brand.create')}}"><i  class="icon-plus"></i>Create Brand</a></h2>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="icon-home"></i></a></li>
-                            <li class="breadcrumb-item active">Category</li>
+                            <li class="breadcrumb-item active">Brand</li>
                         </ul>
-                        <p class="float-right">Total Category : {{\App\Models\Category::count()}}</p>
+                        <p class="float-right">Total Brands : {{\App\Models\Brand::count()}}</p>
                     </div>
 
                 </div>
             </div>
 
-            <div class="row clearfix">
+
 
                 <div class="col-lg-12">
                     @include('backend.layouts.notification')
@@ -27,7 +27,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>Categorys</strong> List</h2>
+                            <h2><strong>Brands</strong> List</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -36,38 +36,37 @@
                                         <tr>
                                             <th>Code</th>
                                             <th>Title</th>
+
                                             <th>Photo</th>
-                                            <th>Parent</th>
-                                            <th> Is Parent</th>
                                             <th>Status</th>
 
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($catergors as $item)
+                                        @foreach ($brands as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->title }}</td>
-                                                <td><img src="{{ $item->photo }}" alt="banner image" style="max-height: 90px; max-width: 120px">
+
+                                                <td><img src="{{ $item->photo }}" alt="brand image"
+                                                        style="max-height: 90px; max-width: 120px">
                                                 </td>
-                                                <td>{{\App\Models\Category::where('id',$item->parent_id)->value('title')}}</td>
-                                                <td> {{ $item->is_parent===1 ? 'Yes' : 'No'}} </td>
 
                                                 <td>
                                                     <input type="checkbox" name="toogle" value="{{ $item->id }}"
                                                         data-toggle="switchbutton"
                                                         {{ $item->status == 'active' ? 'checked' : '' }}
                                                         data-onlabel="active" data-offlabel="inactive" data-size="sm"
-                                                        data-onstyle="success" data-offstyle="danger">
+                                                        data-onstyle="success" data-offstyle="danger"
+                                                        >
 
                                                 </td>
                                                 <td>
-                                                   {{--  button edite  --}}
-                                                    <a href="{{ route('category.edit', $item->id) }}" data-toggle="tooltip" title="edit" class="float-left btn btn-sm btn-outline-wrning" data-placement="bottom"><i class="fas fa-edit"></i></a>
+                                                    <a href="{{ route('brand.edit', $item->id) }}" data-toggle="tooltip" title="edit" class="float-left btn btn-sm btn-outline-wrning" data-placement="bottom">
+                                                        <i class="fas fa-edit"></i></a>
 
-                                                   {{--  button delete  --}}
-                                                    <form class="float-left ml-1" action="{{route('category.destroy',$item->id)}}" method="post">
+                                                    <form class="float-left ml-1" action="{{route('brand.destroy',$item->id)}}" method="post">
                                                         @csrf
                                                         @method('delete')
                                                         <a href="" data-toggle="tooltip" title="delete" data-id="{{$item->id}}" class="dltBtn btn btn-sm btn-outline-danger" data-placement="bottom"><i
@@ -92,7 +91,7 @@
 @section('scripts')
 
 
-//notification delete
+{{--  //notification delete  --}}
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $.ajaxSetup({
@@ -134,7 +133,7 @@
             var mode = $(this).prop('checked');
             var id = $(this).val();
             $.ajax({
-                url: "{{ route('category.status') }}",
+                url: "{{ route('brand.status') }}",
                 type: "POST",
                 data: {
                     _token: '{{ csrf_token() }}',
